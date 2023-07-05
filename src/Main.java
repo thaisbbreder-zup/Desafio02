@@ -227,7 +227,7 @@ public class Main {
                     System.out.println("Produto: " + produto.getNomeProduto());
                     System.out.println("Preço: " + produto.getPreco());
                     System.out.println("Cliente: " + cliente.getNome());
-                    System.out.println("Vendedor: " + cliente.getNome());
+                    System.out.println("Vendedor: " + vendedor.getNome());
                 }
             }
         }
