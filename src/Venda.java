@@ -28,4 +28,9 @@ public class Venda {
 
     public void setClienteResponsavel(Cliente cliente) {
     }
+
+    public void getClienteResponsavel() {
+    }
+
+
 }

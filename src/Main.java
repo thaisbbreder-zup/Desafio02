@@ -84,17 +84,18 @@ public class Main {
         System.out.print("Digite o CPF do vendedor: ");
         int cpf = entradaDoUsuario.nextInt();
         if (verificarCPFDuplicadoVendedor(cpf)) {
-            System.out.println("\nERRO: Já existe um vendedor com esse CPF cadastrado!");
+            System.out.println("\nERRO: Já existe um vendedor com esse CPF cadastrado!"); //ENTREGA MEDIA
             return; // Retorna sem adicionar o vendedor na lista
         }
+        //ENTREGA MEDIA
         System.out.print("Digite o email do vendedor: ");
         String email = entradaDoUsuario.next();
         if (!email.contains("@")) {
-            System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'.");
+            System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'."); //ENTREGA MEDIA
             return;
         }
         if (verificarEmailDuplicadoVendedor(email)) {
-            System.out.println("\nERRO: Já existe um vendedor com esse email cadastrado!");
+            System.out.println("\nERRO: Já existe um vendedor com esse email cadastrado!"); //ENTREGA MEDIA
             return;
         }
         Vendedor vendedor = new Vendedor(nome, cpf, email);
@@ -124,17 +125,17 @@ public class Main {
         System.out.print("Digite o CPF do cliente: ");
         int cpf = entradaDoUsuario.nextInt();
         if (verificarCPFDuplicadoCliente(cpf)) {
-            System.out.println("\nERRO: Já existe um cliente com esse CPF cadastrado!");
+            System.out.println("\nERRO: Já existe um cliente com esse CPF cadastrado!"); //ENTREGA MEDIA
             return; // Retorna sem adicionar o cliente na lista
         }
         System.out.print("Digite o email do cliente: ");
         String email = entradaDoUsuario.next();
         if (!email.contains("@")) {
-            System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'.");
+            System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'."); //ENTREGA MEDIA
             return;
         }
         if (verificarEmailDuplicadoCliente(email)) {
-            System.out.println("\nERRO: Já existe um cliente com esse email cadastrado!");
+            System.out.println("\nERRO: Já existe um cliente com esse email cadastrado!"); //ENTREGA MEDIA
             return;
         }
         Cliente cliente = new Cliente(nome, cpf, email);
@@ -166,30 +167,30 @@ public class Main {
         Venda venda = new Venda(nomeProduto, preco);
 
         try {
-        if (!vendedores.isEmpty()) {
-            System.out.println("\nSelecione o vendedor responsável pela venda: ");
-            for (int i = 0; i < vendedores.size(); i++) {
-                System.out.println((i + 1) + " - " + vendedores.get(i).getNome());
+            if (!vendedores.isEmpty()) {
+                System.out.println("\nSelecione o vendedor responsável pela venda: ");
+                for (int i = 0; i < vendedores.size(); i++) {
+                    System.out.println((i + 1) + " - " + vendedores.get(i).getNome());
+                }
+                int vendedorResponsavel = entradaDoUsuario.nextInt();
+                Vendedor vendedor = vendedores.get(vendedorResponsavel - 1);
+                venda.setVendedorResponsavel(vendedor);
+            } else if (vendedores.isEmpty()) {
+                //não cadastra se a lista de vendedor/cliente estiver vazia
+                System.out.println("\nERRO: Favor cadastrar vendedor antes de adicionar uma venda.");
             }
-            int vendedorResponsavel = entradaDoUsuario.nextInt();
-            Vendedor vendedor = vendedores.get(vendedorResponsavel - 1);
-            venda.setVendedorResponsavel(vendedor);
-        } else if (vendedores.isEmpty()) {
-            //não cadastra se a lista de vendedor/cliente estiver vazia
-            System.out.println("\nERRO: Favor cadastrar vendedor antes de adicionar uma venda.");
-        }
 
-        if (!clientes.isEmpty()) {
-            System.out.println("\nSelecione o cliente que realizou a compra: ");
-            for (int i = 0; i < clientes.size(); i++) {
-                System.out.println((i + 1) + " - " + clientes.get(i).getNome());
+            if (!clientes.isEmpty()) {
+                System.out.println("\nSelecione o cliente que realizou a compra: ");
+                for (int i = 0; i < clientes.size(); i++) {
+                    System.out.println((i + 1) + " - " + clientes.get(i).getNome());
+                }
+                int clienteResponsavel = entradaDoUsuario.nextInt();
+                Cliente cliente = clientes.get(clienteResponsavel - 1);
+                venda.setClienteResponsavel(cliente);
+            } else if (clientes.isEmpty()) {
+                System.out.println("\nERRO: Favor cadastrar cliente antes de adicionar uma venda.");
             }
-            int clienteResponsavel = entradaDoUsuario.nextInt();
-            Cliente cliente = clientes.get(clienteResponsavel - 1);
-            venda.setClienteResponsavel(cliente);
-        } else if (clientes.isEmpty()) {
-            System.out.println("\nERRO: Favor cadastrar cliente antes de adicionar uma venda.");
-        }
 
             produtos.add(venda);
 
@@ -249,7 +250,7 @@ public class Main {
             if (vendedor.getCpf() == buscaCpf) {
                 return vendedor;
             }
-            //tenho que retornar os produtos que ele vendeu
+            // retornar os produtos que ele vendeu
         }
         return null;
     }
@@ -261,11 +262,9 @@ public class Main {
         int buscaCpf = entradaDoUsuario.nextInt();
         for (Cliente cliente : clientes) {
             if (cliente.getCpf() == buscaCpf) {
-                if (cliente.getCpf() == buscaCpf) {
-                    return cliente;
-                }
-                //tenho que retornar os produtos que ele vendeu
+                return cliente;
             }
+            // retornar os produtos que ele vendeu
         }
         return null;
     }
