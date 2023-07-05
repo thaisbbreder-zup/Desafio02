@@ -228,44 +228,78 @@ public class Main {
     //LISTAR VENDAS
     public static void listarVendas() {
         System.out.println("\n***************** Vendas cadastradas *****************");
-        for (Venda produto : getProdutos()) {
-            for (Cliente cliente : getClientes()) {
-                for (Vendedor vendedor : getVendedores()) {
-                    System.out.println("Produto: " + produto.getNomeProduto());
-                    System.out.println("Preço: " + produto.getPreco());
-                    System.out.println("Cliente: " + cliente.getNome());
-                    System.out.println("Vendedor: " + vendedor.getNome());
-                }
-            }
+        for (Venda venda : produtos) {
+            System.out.println("Produto: " + venda.getNomeProduto());
+            System.out.println("Preço: " + venda.getPreco());
+            System.out.println("Cliente: " + venda.getClienteResponsavel().getNome());
+            System.out.println("Vendedor: " + venda.getVendedorResponsavel().getNome());
+            System.out.println("------------------------");
         }
     }
 
     //PESQUISAR VENDEDOR PELO CPF
     public static Vendedor pesquisarVendedor() {
         Scanner entradaDoUsuario = new Scanner(System.in);
-        System.out.print("Digite o CPF do vendedor para pesquisar suas vendas: ");
+        System.out.print("Digite o CPF do vendedor para pesquisar suas compras: ");
         int buscaCpf = entradaDoUsuario.nextInt();
-        System.out.println("\n***************** Pesquisa por CPF *****************");
+
+        Vendedor vendedorEncontrado = null;
+
         for (Vendedor vendedor : vendedores) {
             if (vendedor.getCpf() == buscaCpf) {
-                return vendedor;
+                vendedorEncontrado = vendedor;
+                break;
             }
-            // retornar os produtos que ele vendeu
         }
-        return null;
+
+        if (vendedorEncontrado != null) {
+            System.out.println("\n***************** Vendas do Vendedor *****************");
+            for (Venda venda : produtos) {
+                if (venda.getVendedorResponsavel().equals(vendedorEncontrado)) {
+                    System.out.println("Produto: " + venda.getNomeProduto());
+                    System.out.println("Cliente: " + venda.getClienteResponsavel().getNome());
+                    System.out.println("Preço: " + venda.getPreco());
+                    System.out.println("------------------------");
+                }
+            }
+        } else {
+            System.out.println("\nNenhum vendedor encontrado com o CPF fornecido.");
+        }
+
+        return vendedorEncontrado;
     }
 
     //PESQUISAR CLIENTE PELO CPF
     public static Cliente pesquisarCliente() {
         Scanner entradaDoUsuario = new Scanner(System.in);
-        System.out.print("Digite o CPF do cliente para pesquisar suas vendas: ");
+        System.out.print("Digite o CPF do cliente para pesquisar suas compras: ");
         int buscaCpf = entradaDoUsuario.nextInt();
+
+        Cliente clienteEncontrado = null;
+
         for (Cliente cliente : clientes) {
             if (cliente.getCpf() == buscaCpf) {
-                return cliente;
+                clienteEncontrado = cliente;
+                break;
             }
-            // retornar os produtos que ele vendeu
         }
-        return null;
+
+        if (clienteEncontrado != null) {
+
+            for (Venda produto : getProdutos()) {
+                for (Cliente cliente : getClientes()) {
+                    System.out.println("\n***************** Compras do Cliente *****************");
+                    System.out.println("Produto: " + produto.getNomeProduto());
+                    System.out.println("Preço: " + produto.getPreco());
+                    System.out.println("Cliente: " + cliente.getNome());
+                }
+            }
+        } else {
+            System.out.println("\nNenhum cliente encontrado com o CPF fornecido.");
+        }
+
+        return clienteEncontrado;
     }
 }
+
+

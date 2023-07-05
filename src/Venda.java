@@ -1,6 +1,8 @@
 public class Venda {
     private String nomeProduto;
     private double preco;
+    private Cliente clienteResponsavel;
+    private Vendedor vendedorResponsavel;
 
     public Venda(String nomeProduto, double preco) {
         this.nomeProduto = nomeProduto;
@@ -23,14 +25,19 @@ public class Venda {
         this.preco = preco;
     }
 
-    public void setVendedorResponsavel(Vendedor vendedor) {
-    }
-
     public void setClienteResponsavel(Cliente cliente) {
+        this.clienteResponsavel = cliente;
     }
 
-    public void getClienteResponsavel() {
+    public Cliente getClienteResponsavel() {
+        return clienteResponsavel;
     }
 
+    public void setVendedorResponsavel(Vendedor vendedor) {
+        this.vendedorResponsavel = vendedor;
+    }
 
+    public Vendedor getVendedorResponsavel() {
+        return vendedorResponsavel;
+    }
 }
