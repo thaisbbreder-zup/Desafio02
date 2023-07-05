@@ -1,12 +1,27 @@
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+
 public class Venda {
     private String nomeProduto;
     private double preco;
     private Cliente clienteResponsavel;
     private Vendedor vendedorResponsavel;
+    //data de registro
+    private LocalDate dataRegistro;
 
-    public Venda(String nomeProduto, double preco) {
-        this.nomeProduto = nomeProduto;
-        this.preco = preco;
+
+  public Venda(String nomeProduto, double preco) {
+      this.nomeProduto = nomeProduto;
+      this.preco = preco;
+  }
+
+    public LocalDate getDataRegistro() {
+        return dataRegistro;
+    }
+
+    public void setDataRegistro(LocalDate dataRegistro) {
+        this.dataRegistro = dataRegistro;
     }
 
     public String getNomeProduto() {

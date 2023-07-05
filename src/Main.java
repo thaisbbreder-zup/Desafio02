@@ -1,9 +1,10 @@
+import java.time.LocalDate;
 import java.util.*;
 
 public class Main {
     private static List<Cliente> clientes = new ArrayList<>();
     private static List<Vendedor> vendedores = new ArrayList<>();
-    private static List<Venda> produtos = new ArrayList<>();
+    private static List<Venda> vendas = new ArrayList<>();
 
     public static List<Vendedor> getVendedores() {
         return vendedores;
@@ -13,14 +14,14 @@ public class Main {
         return clientes;
     }
 
-    public static List<Venda> getProdutos() {
-        return produtos;
+    public static List<Venda> getVenda() {
+        return vendas;
     }
 
     public static void main(String[] args) throws Exception {
 
         Scanner entradaDoUsuario = new Scanner(System.in);
-        int opcao;
+        int opcao = -1;
 
         System.out.println("\n***************** Bem vindo ao registro de vendas! *****************");
 
@@ -33,12 +34,14 @@ public class Main {
                     + "\n4 - Listar vendedores"
                     + "\n5 - Listar clientes"
                     + "\n6 - Listar vendas"
-                    + "\n7 - Pesquisar vendedor"
-                    + "\n8 - Pesquisar cliente"
-                    + "\n9 - Sair");
+                    + "\n7 - Pesquisar vendedor por cpf"
+                    + "\n8 - Pesquisar cliente por cpf"
+                    + "\n9 - Pesquisar vendedor por email"
+                    + "\n10 - Pesquisar cliente por email"
+                    + "\n11 - Sair");
             System.out.println("\n-----------------------------------------------------------------");
-            System.out.print("\nOpção selecionada: ");
 
+            System.out.print("\nOpção selecionada: ");
             opcao = entradaDoUsuario.nextInt();
 
             switch (opcao) {
@@ -61,46 +64,57 @@ public class Main {
                     listarVendas();
                     break;
                 case 7:
-                    pesquisarVendedor();
+                    pesquisarVendedorCPF();
                     break;
                 case 8:
-                    pesquisarCliente();
+                    pesquisarClienteCPF();
                     break;
                 case 9:
+                    pesquisarVendedorEmail();
+                    break;
+                case 10:
+                    pesquisarClienteEmail();
+                    break;
+                case 11:
                     System.out.println("Encerrando o programa...");
                     break;
                 default:
                     System.out.println("Opção inválida. Por favor, selecione um número válido.");
             }
-        } while (opcao != 9);
+        } while (opcao != 11);
     }
 
     //CADASTRAR VENDEDOR
     public static void cadastrarVendedor() {
         Scanner entradaDoUsuario = new Scanner(System.in);
         System.out.println("\n***************** Cadastro de Vendedor *****************");
-        System.out.print("Digite o nome do vendedor: ");
-        String nome = entradaDoUsuario.nextLine();
-        System.out.print("Digite o CPF do vendedor: ");
-        int cpf = entradaDoUsuario.nextInt();
-        if (verificarCPFDuplicadoVendedor(cpf)) {
-            System.out.println("\nERRO: Já existe um vendedor com esse CPF cadastrado!"); //ENTREGA MEDIA
-            return; // Retorna sem adicionar o vendedor na lista
+        try {
+            System.out.print("Digite o nome do vendedor: ");
+            String nome = entradaDoUsuario.nextLine();
+            System.out.print("Digite o CPF do vendedor: ");
+            int cpf = entradaDoUsuario.nextInt();
+            if (verificarCPFDuplicadoVendedor(cpf)) {
+                System.out.println("\nERRO: Já existe um vendedor com esse CPF cadastrado!"); //ENTREGA MEDIA
+                return; // Retorna sem adicionar o vendedor na lista
+            }
+            System.out.print("Digite o email do vendedor: ");
+            String email = entradaDoUsuario.next();
+            if (!email.contains("@")) {
+                System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'."); //ENTREGA MEDIA
+                return;
+            }
+            if (verificarEmailDuplicadoVendedor(email)) {
+                System.out.println("\nERRO: Já existe um vendedor com esse email cadastrado!"); //ENTREGA MEDIA
+                return;
+            }
+            Vendedor vendedor = new Vendedor(nome, cpf, email);
+            vendedores.add(vendedor);
+            System.out.println("\n*** Vendedor cadastrado com sucesso! ***");
+        } catch (InputMismatchException e) { //valor fornecido não corresponde ao tipo esperado
+            System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-        //ENTREGA MEDIA
-        System.out.print("Digite o email do vendedor: ");
-        String email = entradaDoUsuario.next();
-        if (!email.contains("@")) {
-            System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'."); //ENTREGA MEDIA
-            return;
-        }
-        if (verificarEmailDuplicadoVendedor(email)) {
-            System.out.println("\nERRO: Já existe um vendedor com esse email cadastrado!"); //ENTREGA MEDIA
-            return;
-        }
-        Vendedor vendedor = new Vendedor(nome, cpf, email);
-        vendedores.add(vendedor);
-        System.out.println("\n*** Vendedor cadastrado com sucesso! ***");
     }
 
     private static boolean verificarCPFDuplicadoVendedor(int cpf) {
@@ -120,24 +134,40 @@ public class Main {
     public static void cadastrarCliente() {
         Scanner entradaDoUsuario = new Scanner(System.in);
         System.out.println("\n***************** Cadastro de Cliente *****************");
+
         System.out.print("Digite o nome do cliente: ");
-        String nome = entradaDoUsuario.nextLine();
-        System.out.print("Digite o CPF do cliente: ");
-        int cpf = entradaDoUsuario.nextInt();
+        String nome = entradaDoUsuario.next();
+
+        int cpf = 0;
+
+        try {
+            System.out.print("Digite o CPF do cliente: ");
+            cpf = entradaDoUsuario.nextInt();
+        } catch (InputMismatchException e) { //valor fornecido não corresponde ao tipo esperado(int)
+            System.out.println("\nERRO: Valor inválido. Informe um valor numérico.");
+            return;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
         if (verificarCPFDuplicadoCliente(cpf)) {
             System.out.println("\nERRO: Já existe um cliente com esse CPF cadastrado!"); //ENTREGA MEDIA
             return; // Retorna sem adicionar o cliente na lista
         }
+
         System.out.print("Digite o email do cliente: ");
         String email = entradaDoUsuario.next();
         if (!email.contains("@")) {
             System.out.println("\nERRO: Email inválido! O email deve conter o caractere '@'."); //ENTREGA MEDIA
             return;
         }
+
         if (verificarEmailDuplicadoCliente(email)) {
             System.out.println("\nERRO: Já existe um cliente com esse email cadastrado!"); //ENTREGA MEDIA
             return;
         }
+
         Cliente cliente = new Cliente(nome, cpf, email);
         clientes.add(cliente);
         System.out.println("\n*** Cliente cadastrado com sucesso! ***");
@@ -164,10 +194,12 @@ public class Main {
         String nomeProduto = entradaDoUsuario.nextLine();
         System.out.print("Digite o preço do produto: ");
         double preco = entradaDoUsuario.nextDouble();
+
+        //cria a venda passando o produto como parâmetro
         Venda venda = new Venda(nomeProduto, preco);
 
-        try {
-            if (!vendedores.isEmpty()) {
+        if (!vendedores.isEmpty()) {
+            try {
                 System.out.println("\nSelecione o vendedor responsável pela venda: ");
                 for (int i = 0; i < vendedores.size(); i++) {
                     System.out.println((i + 1) + " - " + vendedores.get(i).getNome());
@@ -175,12 +207,24 @@ public class Main {
                 int vendedorResponsavel = entradaDoUsuario.nextInt();
                 Vendedor vendedor = vendedores.get(vendedorResponsavel - 1);
                 venda.setVendedorResponsavel(vendedor);
-            } else if (vendedores.isEmpty()) {
-                //não cadastra se a lista de vendedor/cliente estiver vazia
-                System.out.println("\nERRO: Favor cadastrar vendedor antes de adicionar uma venda.");
+            } catch (InputMismatchException e) {
+                System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
+                return;
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                System.out.println("\nERRO: Opção inválida. Por favor, selecione um número válido.");
+                return;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                return;
             }
+        } else if (vendedores.isEmpty()) {
+            //não cadastra se a lista de vendedor/cliente estiver vazia
+            System.out.println("\nERRO: Favor cadastrar vendedor antes de adicionar uma venda.");
+            return;
+        }
 
-            if (!clientes.isEmpty()) {
+        if (!clientes.isEmpty()) {
+            try {
                 System.out.println("\nSelecione o cliente que realizou a compra: ");
                 for (int i = 0; i < clientes.size(); i++) {
                     System.out.println((i + 1) + " - " + clientes.get(i).getNome());
@@ -188,21 +232,24 @@ public class Main {
                 int clienteResponsavel = entradaDoUsuario.nextInt();
                 Cliente cliente = clientes.get(clienteResponsavel - 1);
                 venda.setClienteResponsavel(cliente);
-            } else if (clientes.isEmpty()) {
-                System.out.println("\nERRO: Favor cadastrar cliente antes de adicionar uma venda.");
+                System.out.println("\n*** Venda cadastrada com sucesso ***");
+            } catch (InputMismatchException e) {
+                System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
+                return;
+            } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                System.out.println("\nERRO: Opção inválida. Por favor, selecione um número válido.");
+                return;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                return;
             }
-
-            produtos.add(venda);
-
-        } catch (InputMismatchException e) {
-            System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
-        } catch (NoSuchElementException e) {
-            System.out.println("\nERRO: Entrada inválida. Verifique se todas as informações necessárias foram fornecidas.");
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
-            System.out.println("\nERRO: Opção inválida. Por favor, selecione um número válido.");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } else if (clientes.isEmpty()) {
+            System.out.println("\nERRO: Favor cadastrar cliente antes de adicionar uma venda.");
+            return;
         }
+
+        venda.setDataRegistro(LocalDate.now());
+        vendas.add(venda);
     }
 
     //LISTAR VENDEDORES
@@ -228,21 +275,28 @@ public class Main {
     //LISTAR VENDAS
     public static void listarVendas() {
         System.out.println("\n***************** Vendas cadastradas *****************");
-        for (Venda venda : produtos) {
+        for (Venda venda : vendas) {
             System.out.println("Produto: " + venda.getNomeProduto());
             System.out.println("Preço: " + venda.getPreco());
             System.out.println("Cliente: " + venda.getClienteResponsavel().getNome());
             System.out.println("Vendedor: " + venda.getVendedorResponsavel().getNome());
-            System.out.println("------------------------");
+            System.out.println("Data da venda: " + venda.getDataRegistro());
         }
     }
 
     //PESQUISAR VENDEDOR PELO CPF
-    public static Vendedor pesquisarVendedor() {
+    public static Vendedor pesquisarVendedorCPF() {
         Scanner entradaDoUsuario = new Scanner(System.in);
-        System.out.print("Digite o CPF do vendedor para pesquisar suas compras: ");
-        int buscaCpf = entradaDoUsuario.nextInt();
 
+        try {
+            System.out.print("Digite o CPF do vendedor para pesquisar suas vendas: ");
+        } catch (InputMismatchException e) { //valor fornecido não corresponde ao tipo esperado
+            System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        int buscaCpf = entradaDoUsuario.nextInt();
         Vendedor vendedorEncontrado = null;
 
         for (Vendedor vendedor : vendedores) {
@@ -254,27 +308,63 @@ public class Main {
 
         if (vendedorEncontrado != null) {
             System.out.println("\n***************** Vendas do Vendedor *****************");
-            for (Venda venda : produtos) {
+            for (Venda venda : vendas) {
                 if (venda.getVendedorResponsavel().equals(vendedorEncontrado)) {
                     System.out.println("Produto: " + venda.getNomeProduto());
-                    System.out.println("Cliente: " + venda.getClienteResponsavel().getNome());
                     System.out.println("Preço: " + venda.getPreco());
-                    System.out.println("------------------------");
+                    System.out.println("Cliente: " + venda.getClienteResponsavel().getNome());
                 }
             }
         } else {
             System.out.println("\nNenhum vendedor encontrado com o CPF fornecido.");
         }
+        return vendedorEncontrado;
+    }
+
+    public static Vendedor pesquisarVendedorEmail() {
+        Scanner entradaDoUsuario = new Scanner(System.in);
+
+        System.out.print("Digite o email do vendedor para pesquisar suas vendas: ");
+        String buscaEmail = entradaDoUsuario.nextLine();
+
+        Vendedor vendedorEncontrado = null;
+
+        for (Vendedor vendedor : vendedores) {
+            if (vendedor.getEmail().equals(buscaEmail)) {
+                vendedorEncontrado = vendedor;
+                break;
+            }
+        }
+
+        if (vendedorEncontrado != null) {
+            System.out.println("\n***************** Vendas do Vendedor *****************");
+            for (Venda venda : vendas) {
+                if (venda.getVendedorResponsavel().equals(vendedorEncontrado)) {
+                    System.out.println("Produto: " + venda.getNomeProduto());
+                    System.out.println("Preço: " + venda.getPreco());
+                    System.out.println("Cliente: " + venda.getClienteResponsavel().getNome());
+                }
+            }
+        } else {
+            System.out.println("\nNenhum vendedor encontrado com o email fornecido.");
+        }
 
         return vendedorEncontrado;
     }
 
-    //PESQUISAR CLIENTE PELO CPF
-    public static Cliente pesquisarCliente() {
-        Scanner entradaDoUsuario = new Scanner(System.in);
-        System.out.print("Digite o CPF do cliente para pesquisar suas compras: ");
-        int buscaCpf = entradaDoUsuario.nextInt();
 
+    //PESQUISAR CLIENTE PELO CPF
+    public static Cliente pesquisarClienteCPF() {
+        Scanner entradaDoUsuario = new Scanner(System.in);
+        try {
+            System.out.print("Digite o CPF do cliente para pesquisar suas compras: ");
+        } catch (InputMismatchException e) { //valor fornecido não corresponde ao tipo esperado
+            System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        int buscaCpf = entradaDoUsuario.nextInt();
         Cliente clienteEncontrado = null;
 
         for (Cliente cliente : clientes) {
@@ -285,13 +375,14 @@ public class Main {
         }
 
         if (clienteEncontrado != null) {
-
-            for (Venda produto : getProdutos()) {
-                for (Cliente cliente : getClientes()) {
+            System.out.println("Cliente: " + clienteEncontrado.getNome());
+            for (Venda vendas : getVenda()) {
+                if (vendas.getClienteResponsavel().getCpf() == buscaCpf) {
                     System.out.println("\n***************** Compras do Cliente *****************");
-                    System.out.println("Produto: " + produto.getNomeProduto());
-                    System.out.println("Preço: " + produto.getPreco());
-                    System.out.println("Cliente: " + cliente.getNome());
+                    System.out.println("Produto: " + vendas.getNomeProduto());
+                    System.out.println("Preço: " + vendas.getPreco());
+                    System.out.println("Vendedor: " + vendas.getVendedorResponsavel().getNome());
+
                 }
             }
         } else {
@@ -300,6 +391,38 @@ public class Main {
 
         return clienteEncontrado;
     }
+
+    // Pesquisar cliente por email
+    public static Cliente pesquisarClienteEmail() {
+        Scanner entradaDoUsuario = new Scanner(System.in);
+
+        System.out.print("Digite o email do cliente para pesquisar suas compras: ");
+        String buscaEmail = entradaDoUsuario.nextLine();
+
+        Cliente clienteEncontrado = null;
+
+        for (Cliente cliente : clientes) {
+            if (cliente.getEmail().equals(buscaEmail)) {
+                clienteEncontrado = cliente;
+                break;
+            }
+        }
+
+        if (clienteEncontrado != null) {
+            System.out.println("\n***************** Compras do Cliente *****************");
+            for (Venda venda : vendas) {
+                if (venda.getClienteResponsavel().equals(clienteEncontrado)) {
+                    System.out.println("Produto: " + venda.getNomeProduto());
+                    System.out.println("Preço: " + venda.getPreco());
+                    System.out.println("Vendedor: " + venda.getVendedorResponsavel().getNome());
+                }
+            }
+        } else {
+            System.out.println("\nNenhum cliente encontrado com o email fornecido.");
+        }
+        return clienteEncontrado;
+    }
+
 }
 
 
