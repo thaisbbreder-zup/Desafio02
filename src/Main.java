@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     private static List<Cliente> clientes = new ArrayList<>();
@@ -158,7 +156,7 @@ public class Main {
     }
 
     //CADASTRAR VENDA
-    public static void cadastrarVenda() {
+    public static void cadastrarVenda() throws Exception {
         Scanner entradaDoUsuario = new Scanner(System.in);
         System.out.println("\n***************** Cadastro de Venda *****************");
         System.out.print("Digite o nome do produto: ");
@@ -167,6 +165,7 @@ public class Main {
         double preco = entradaDoUsuario.nextDouble();
         Venda venda = new Venda(nomeProduto, preco);
 
+        try {
         if (!vendedores.isEmpty()) {
             System.out.println("\nSelecione o vendedor responsável pela venda: ");
             for (int i = 0; i < vendedores.size(); i++) {
@@ -192,9 +191,16 @@ public class Main {
             System.out.println("\nERRO: Favor cadastrar cliente antes de adicionar uma venda.");
         }
 
-        if (!vendedores.isEmpty() && !clientes.isEmpty()) {
             produtos.add(venda);
-            System.out.println("\n*** Venda cadastrada com sucesso! ***");
+
+        } catch (InputMismatchException e) {
+            System.out.println("\nERRO: Valor inválido. Forneça um valor numérico.");
+        } catch (NoSuchElementException e) {
+            System.out.println("\nERRO: Entrada inválida. Verifique se todas as informações necessárias foram fornecidas.");
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            System.out.println("\nERRO: Opção inválida. Por favor, selecione um número válido.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
