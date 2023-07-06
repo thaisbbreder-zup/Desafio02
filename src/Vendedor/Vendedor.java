@@ -1,4 +1,6 @@
-import java.util.List;
+package Vendedor;
+
+import Pessoa.Pessoa;
 
 public class Vendedor extends Pessoa {
 

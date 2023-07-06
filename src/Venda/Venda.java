@@ -1,6 +1,9 @@
+package Venda;
+
+import Cliente.Cliente;
+import Vendedor.Vendedor;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class Venda {
     private String nomeProduto;
@@ -28,16 +31,8 @@ public class Venda {
         return nomeProduto;
     }
 
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
-    }
-
     public double getPreco() {
         return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
     }
 
     public void setClienteResponsavel(Cliente cliente) {
