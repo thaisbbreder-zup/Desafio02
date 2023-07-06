@@ -14,7 +14,7 @@ Além das funcionalidades básicas, o sistema também possui as seguintes restri
 
 ### 🌟🔎 Entrega Máxima 
 Na versão máxima do sistema, foram adicionadas as seguintes funcionalidades:
-- __Pesquisa por CPF:__ É possível pesquisar todas as compras/vendas realizadas por um cliente/vendedor específico, utilizando o seu CPF como filtro.<br>
+- __Pesquisa por CPF e por e-mail:__ É possível pesquisar todas as compras/vendas realizadas por um cliente/vendedor específico, utilizando o seu CPF ou seu e-mail como filtro.<br>
 
 # 💡📝 Estrutura do Código
 O código do sistema está organizado em pacotes, seguindo a divisão de responsabilidades. Abaixo está uma breve descrição de cada pacote:
